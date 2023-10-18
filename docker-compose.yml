@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  my-app:
+  server_b_:
     container_name: "server_b"
     build:
       context: .
@@ -11,7 +11,7 @@ services:
       - NODE_OPTIONS=--max_old_space_size=8000
     networks:
       - claro_server_b
-  mysql:
+  mysql_server_b:
     container_name: DB_B
     image: mysql:lastest
     ports:
@@ -25,6 +25,6 @@ services:
     networks:
       - claro_server_b
 volumes:
-  DB_B_VOLUME:
+  DB_B_VOLUMES:
 networks:
   claro_server_b:
