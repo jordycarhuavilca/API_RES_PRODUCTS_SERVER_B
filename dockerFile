@@ -1,0 +1,15 @@
+FROM node:18
+
+RUN mkdir -p /home/app
+
+COPY package/*.json  ./
+
+COPY . .
+
+WORKDIR  /home/app
+
+COPY . /home/app
+
+EXPOSE 3008
+
+CMD ["npm","run","dev"]

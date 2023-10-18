@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  my-app:
+    container_name: "server_b"
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    ports:
+      - 3008:3008
+    environment:
+      - NODE_OPTIONS=--max_old_space_size=8000
+    networks:
+      - claro_server_b
+  mysql:
+    container_name: DB_B
+    image: mysql:lastest
+    ports:
+      - 3011:3011
+    environment:
+      MSQL_OPTS: --skip-host-cache
+    env_file:
+      - .env
+    volumes:
+      - DB_B_VOLUMES
+    networks:
+      - claro_server_b
+volumes:
+  DB_B_VOLUME:
+networks:
+  claro_server_b:
