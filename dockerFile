@@ -1,15 +1,15 @@
 FROM node:18
 
-RUN mkdir -p /home/app
+WORKDIR /usr/src/server_B
 
-COPY package/*.json  ./
+COPY package*.json  ./
 
 COPY . .
 
-WORKDIR  /home/app
+RUN npm install
 
-COPY . /home/app
+COPY . /usr/src/server_B
 
-EXPOSE 3008
+EXPOSE "${NODE_PORT}"
 
 CMD ["npm","run","dev"]
