@@ -7,20 +7,14 @@ const getProducts = async (numOrder) => {
     `http://SERVER_A:3004/order/${numOrder}/getOrdersDetail`
   );
 };
-const fillDetails = async (value) => {
+const fillDetails = async (list) => {
   try {
-    const list = [...value]
-    const data = await Promise.all(list.map(async (report) => {
-      const numOrder = report.report_factu_products[0].numOrder;
+    for (let i = 0; i < list.length; i++) {
+      const numOrder = list[i].report_factu_products[0].numOrder;
       const res = await getProducts(numOrder);
-      return res.data.data;
-    }));
-    
-    list.forEach((report, index) => {
-        const productInstance = report.report_factu_products[0]
-        productInstance.setDataValue('details', data[index]);
-    });
-
+      const productInstance = list[i].report_factu_products[0]
+      productInstance.setDataValue('details', res.data.data); 
+    }  
     return list;
   } catch (error) {
     console.log("error k " + error);
