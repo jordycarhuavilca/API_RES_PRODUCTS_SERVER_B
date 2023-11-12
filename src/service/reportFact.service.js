@@ -23,31 +23,43 @@ const acomulador = (value, valueToCount) => {
   }
 };
 
+const addReport_factuId = (list, id) => {
+  list.forEach((obj) => {
+    obj.report_factuId = id;
+  });
+  return list;
+};
+
 class reportFact_serv {
   constructor(report_facturacion) {
     this.report_facturacion = report_facturacion;
   }
   async addReportFact(data) {
-    const { list, dni, numOrder } = data;
+    const { list, dni } = data;
 
     const body = {
       cantidadProduct: acomulador(list, "quantity"),
-      total: acomulador(list, "price"),
-      subtotal: acomulador(list, "price") * 0.05 + acomulador(list, "price"),
+      total: acomulador(list,"total"),
+      subtotal: acomulador(list,"total") * 0.05 + acomulador(list,"total"),
       dni: dni,
     };
-
     let nextReportFactId = await this.report_facturacion.getNextReportId();
     await sequelize.transaction(async (t) => {
       await this.report_facturacion.addReportFact(body, t);
       await reportFactProdService.addReportFactProd(
-        { numOrder, report_factuId: nextReportFactId },
+        addReport_factuId(list, nextReportFactId),
         t
       );
     });
   }
-  async getReportFact(dni) {
-    const report = await this.report_facturacion.getReportFact(dni);
+
+  async getReportFact(dni, productId, fechaInicio, fechaFin) {
+    const report = await this.report_facturacion.getReportFact(
+      dni,
+      productId,
+      fechaInicio,
+      fechaFin
+    );
     return report;
   }
 }

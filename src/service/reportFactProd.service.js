@@ -2,8 +2,8 @@ class reportFactProduct_serv {
   constructor(ReportFactProd) {
     this.ReportFactProd = ReportFactProd;
   }
-  async addReportFactProd(ReportFactProd,t) {
-    return await this.ReportFactProd.addReportFactProd(ReportFactProd,t);
+  async addReportFactProd(list,t) {
+    return await this.ReportFactProd.addReportFactProd(list,t);
   }
 }
 

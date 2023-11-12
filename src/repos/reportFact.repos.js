@@ -1,21 +1,30 @@
-const { stringify } = require("flatted");
 const report_factu_product = require("../database/models/report_facturacion_products");
 const axios = require("axios");
-
+const { Op } = require("sequelize");
 const getProducts = async (numOrder) => {
   return await axios.get(
     `http://SERVER_A:3004/order/${numOrder}/getOrdersDetail`
   );
 };
-const fillDetails = async (list) => {
+
+const fillDetails = async (listFact) => {
   try {
-    for (let i = 0; i < list.length; i++) {
-      const numOrder = list[i].report_factu_products[0].numOrder;
+    //esto es un instancia de sequelize
+    for (let i = 0; i < listFact.length; i++) {
+      const numOrder = listFact[i].report_factu_products[0].numOrder;
       const res = await getProducts(numOrder);
-      const productInstance = list[i].report_factu_products[0]
-      productInstance.setDataValue('details', res.data.data); 
-    }  
-    return list;
+      for (let j = 0; j < listFact[i].report_factu_products.length; j++) {
+        const detalleFact = listFact[i].report_factu_products[j];
+        const products = res.data.data;
+        let productId = detalleFact.product_id;
+        let productAndDetail = products.find(
+          (product) => product.tbl_product["product_id"] === productId
+        );
+        //modificar un objeto instanciado por sequelize
+        detalleFact.setDataValue("details", productAndDetail);
+      }
+    }
+    return listFact;
   } catch (error) {
     console.log("error k " + error);
     throw error;
@@ -41,14 +50,21 @@ class reportFact_repos {
       transaction: trans,
     });
   }
-  async getReportFact(dni) {
+  async getReportFact(dni, product_id, fechaInicio, fechaFin) {
+    const whereClause = {};
+    const whereClause2 = {};
+    if (dni)whereClause.dni = dni;
+    if (fechaInicio && fechaFin ) whereClause.fecha = { [Op.between]: [fechaInicio, fechaFin] };
+
+    if (product_id )whereClause2.product_id = product_id;
+
+    console.log("whereClause " + JSON.stringify(whereClause));
     const listReport = await this.report_facturacion.findAll({
-      where: {
-        dni: dni,
-      },
-      include: {
+      where: whereClause,
+      include: [{
         model: report_factu_product,
-      },
+        where : whereClause2
+      }],
     });
     return await fillDetails(listReport);
   }

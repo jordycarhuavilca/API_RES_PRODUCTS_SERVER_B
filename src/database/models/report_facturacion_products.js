@@ -13,6 +13,10 @@ const report_factu_product = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    product_id : {
+      type: DataTypes.INTEGER,
+      allowNull : false
+    }
   },
   {
     timestamps: false,
