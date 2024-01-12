@@ -13,6 +13,7 @@ const addReportFact = async (req, res) => {
     
     const body = req.body
     const {message,statusCode} = constant.reqValidationError
+    if (typeof body != "object")throw new errorHandler.ValidateError("Only object is accepted",statusCode) 
     if (!body) throw new errorHandler.ValidateError(message,statusCode) 
 
     const data = await reportFactService.doReportFact(body);
@@ -25,7 +26,7 @@ const addReportFact = async (req, res) => {
 
 const getReportFact = async (req, res) => {
   res.header("Content-Type", "application/json");
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "http://localhost:3004");
 
   try {
     const dni = req.query.dni || "";

@@ -25,8 +25,12 @@ const report_factu = sequelize.define(
     },
     fecha: {
       type: DataTypes.DATEONLY,
-      defaultValue: DataTypes.NOW,
+      allowNull: false,
     },
+    time : {
+      type : DataTypes.STRING,
+      allowNull: false,
+    }
   },
   {
     timestamps: false,

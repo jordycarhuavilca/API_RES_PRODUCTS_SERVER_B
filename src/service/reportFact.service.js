@@ -29,13 +29,15 @@ class reportFact_serv {
   }
 
   async doReportFact(data) {
-    const { list, dni } = data;
+    const { list,fecha,time, dni } = data;
     const IGV =  0.15
     const body = {
       cantidadProduct: reportHelper.accumulator(list, "quantity"),
       total: reportHelper.accumulator(list,"total"),
       subtotal: reportHelper.accumulator(list,"total") * IGV + reportHelper.accumulator(list,"total"),
       dni: dni,
+      fecha : fecha,
+      time : time
     };
     const response = await handleCommonErr.handleErr(sequelizeConn.transaction(async (t) => {
       const report = await this._addReportFact(body, t);
