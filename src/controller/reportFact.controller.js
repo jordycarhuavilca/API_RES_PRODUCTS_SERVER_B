@@ -3,7 +3,7 @@ const { reportFact_repos } = require("../repos/reportFact.repos");
 const { reportFact_serv } = require("../service/reportFact.service");
 const reportFactRepository = new reportFact_repos(model);
 const constant = require('../helper/constant')
-const errorHandler = require('../helper/errorHandler')
+const errorHandler = require('../helper/errorHandler');
 const reportFactService = new reportFact_serv(reportFactRepository);
 
 const addReportFact = async (req, res) => {
@@ -13,7 +13,7 @@ const addReportFact = async (req, res) => {
     
     const body = req.body
     const {message,statusCode} = constant.reqValidationError
-    if (typeof body != "object")throw new errorHandler.ValidateError("Only object is accepted",statusCode) 
+    if (typeof body != "object" || Array.isArray(body))throw new errorHandler.ValidateError("Only object is accepted",statusCode) 
     if (!body) throw new errorHandler.ValidateError(message,statusCode) 
 
     const data = await reportFactService.doReportFact(body);
@@ -30,13 +30,13 @@ const getReportFact = async (req, res) => {
 
   try {
     const dni = req.query.dni || "";
-    const productId = req.query.product_id || "";
+    const product_id = req.query.product_id || "";
     const fechaInicio = req.query.fechaInicio || "";
     const fechaFin = req.query.fechaFin || "";
     
     const params = {
       dni : dni,
-      productId : productId,
+      product_id : product_id,
       fechaInicio : fechaInicio,
       fechaFin : fechaFin
     }

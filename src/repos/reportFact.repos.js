@@ -29,16 +29,16 @@ class reportFact_repos {
 
   async getReportFact(params) {
     const whereClause = {};
-    const whereClause2 = {};
+    if (params.product_id ) whereClause["$report_factu_products.product_id$"] = params.product_id;
     if (params.dni) whereClause.dni = params.dni;
     if (params.fechaInicio && params.fechaFin ) whereClause.fecha = { [sequelize.Op.between]: [params.fechaInicio, params.fechaFin] };
 
-    if (params.product_id ) whereClause2.product_id = params.product_id;
+    
+    console.log("params "+ params)
     const listReport = await this.report_facturacion.findAll({
       where: whereClause,
       include: [{
-        model: report_factu_product,
-        where : whereClause2
+        model: report_factu_product
       }],
     });
     return await handleCommonErr.handleErr(reportHelper.fillDetails(listReport), sequelize.Error);

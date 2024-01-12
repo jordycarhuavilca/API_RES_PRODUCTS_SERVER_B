@@ -17,7 +17,7 @@ class handleCommonErr{
         try {
           return await promise;
         } catch (error) {
-          console.log(error.message)
+          console.log("error "+ error.message)
           if (error instanceof ErrorOrmInstance) {
             const { message, statusCode } = constant.reqValidationError;
             throw new errorHandler.ValidateError(message, statusCode);
